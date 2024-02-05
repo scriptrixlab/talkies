@@ -13,12 +13,12 @@ dependencies:
   flutter:
     sdk: flutter
   shared_preferences: ^2.0.15
-  carousel_slider: ^4.0.0
-  video_player: ^2.4.2
 
   firebase_core: ^2.25.3
   firebase_auth: ^4.17.3
   cloud_firestore: ^4.15.3
+
+  provider: ^6.1.1
 
 
 

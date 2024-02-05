@@ -1,86 +1,93 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/app_auth_provider.dart';
 
 class WelcomePage extends StatefulWidget {
   static const String id = 'post_login_register';
 
-  const WelcomePage({super.key});
+  const WelcomePage({Key? key}) : super(key: key);
 
   @override
   State<WelcomePage> createState() => _WelcomePageState();
 }
 
 class _WelcomePageState extends State<WelcomePage> {
-  final _auth = FirebaseAuth.instance;
-  late User logedInUser;
-  var usermail = "";
-  String $userdata = "click below button to fetch";
+  late User loggedInUser;
+  var userEmail = "";
+  String userData = "Click below button to fetch";
+  late AppAuthProvider authProvider;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    authProvider = Provider.of<AppAuthProvider>(context, listen: false);
     getCurrentUser();
   }
 
   void getCurrentUser() {
     try {
-      logedInUser = _auth.currentUser!;
-      usermail = logedInUser.email!;
+      loggedInUser = authProvider.user!;
+      userEmail = loggedInUser.email!;
     } catch (e) {
       print(e.toString());
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Center(
-            child: Container(
-          child: Column(
-            children: [
-              Text("Welcome after login"),
-              Text("This is users mail:\n $usermail"),
-              Expanded(child: Text($userdata)),
-              ElevatedButton(
+          child: Container(
+            child: Column(
+              children: [
+                Text("Welcome after login"),
+                Text("This is user's email:\n $userEmail"),
+                Expanded(child: Text(userData)),
+                ElevatedButton(
                   onPressed: _fetchUserDocData,
-                  child: Text("Fetch User Document")),
-              ElevatedButton(
+                  child: Text("Fetch User Document"),
+                ),
+                ElevatedButton(
                   onPressed: () async {
-                    await FirebaseAuth.instance.signOut();
+                    await authProvider.signOut();
                   },
-                  child: Text("Logout"))
-            ],
+                  child: Text("Logout"),
+                ),
+              ],
+            ),
           ),
-        )),
+        ),
       ),
     );
   }
 
   void _fetchUserDocData() async {
     CollectionReference users = FirebaseFirestore.instance.collection("users");
-    String documentId = _auth.currentUser!.uid;
+    String? documentId = authProvider.user?.uid;
 
     try {
       DocumentSnapshot snapshot = await users.doc(documentId).get();
 
       if (snapshot.exists) {
-        Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+        Map<String, dynamic> data =
+        snapshot.data() as Map<String, dynamic>;
 
         setState(() {
-          $userdata =
-              "Full Name: ${data['name']} \nPhone No: ${data['mobile']} Email: ${data['email']}";
+          userData =
+          "Full Name: ${data['name']} \nPhone No: ${data['mobile']} Email: ${data['email']}";
         });
       } else {
         setState(() {
-          $userdata = "Document does not exist";
+          userData = "Document does not exist";
         });
       }
     } catch (e) {
       setState(() {
-        $userdata = "Something went wrong";
+        userData = "Something went wrong";
       });
       print(e.toString());
     }

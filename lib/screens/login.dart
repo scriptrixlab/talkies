@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:talkies/providers/app_auth_provider.dart';
 import 'package:talkies/screens/register.dart';
 import 'package:talkies/screens/welcome.dart';
 
@@ -15,8 +17,15 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   late String email;
   late String password;
-  final _auth = FirebaseAuth.instance;
-  late String field_error = "";
+  late String fieldError = "";
+  late AppAuthProvider authProvider;
+
+  @override
+  void initState() {
+    super.initState();
+    fieldError = '';
+    authProvider = Provider.of<AppAuthProvider>(context, listen: false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +42,6 @@ class _LoginPageState extends State<LoginPage> {
                 width: 20,
                 height: 20,
               ),
-
               // mail Text Field
               SizedBox(
                 width: 250,
@@ -58,7 +66,6 @@ class _LoginPageState extends State<LoginPage> {
                   maxLines: 1,
                 ),
               ),
-
               SizedBox(
                 width: 250,
                 height: 40,
@@ -83,13 +90,12 @@ class _LoginPageState extends State<LoginPage> {
                   maxLines: 1,
                 ),
               ),
-
               const SizedBox(
                 width: 10,
                 height: 10,
               ),
               Text(
-                field_error,
+                fieldError,
                 style: TextStyle(color: Colors.red),
               ),
               //login Button
@@ -120,45 +126,47 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   //other methods
+  // Inside _onLoginBtnClick method in LoginPage
   void _onLoginBtnClick() async {
     if (_validateInputs()) {
       try {
-        final credential = await _auth.signInWithEmailAndPassword(
-            email: email, password: password);
-
+        await authProvider.signIn(email, password);
         setState(() {
-          field_error = ''; // Clear any previous errors
+          fieldError = ''; // Clear any previous errors
         });
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => WelcomePage()));
       } on FirebaseAuthException catch (e) {
         setState(() {
           if (e.code == 'user-not-found') {
-            field_error = 'No user found for that email.';
+            fieldError = 'No user found for that email.';
           } else if (e.code == 'wrong-password') {
-            field_error = 'Wrong password provided for that user.';
+            fieldError = 'Wrong password provided for that user.';
+          } else {
+            fieldError = 'Sign-in failed. Please try again.';
           }
         });
       }
     }
   }
 
+
   bool _validateInputs() {
     if (email.isEmpty || password.isEmpty) {
       setState(() {
-        field_error = 'All fields must be filled out';
+        fieldError = 'All fields must be filled out';
       });
       return false;
     }
     if (password.length < 6) {
       setState(() {
-        field_error = "password length must be greater than 6";
+        fieldError = "password length must be greater than 6";
       });
       return false;
     }
     setState(() {
       // Reset fieldError if all validations pass
-      field_error = '';
+      fieldError = '';
     });
 
     return true;
