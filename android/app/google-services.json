@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "769409823973",
+    "project_id": "talkies-b8e63",
+    "storage_bucket": "talkies-b8e63.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:769409823973:android:da0076cf33531b7338500c",
+        "android_client_info": {
+          "package_name": "com.scriptrix.talkies"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAy3W08Hl3ZY0GSG3v74622dXVsW8dI27I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
