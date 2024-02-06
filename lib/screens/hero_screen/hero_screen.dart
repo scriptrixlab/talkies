@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:talkies/screens/login/login_screen/login_screen.dart';
+
+import '../auth/login_screen/login_screen.dart';
 
 class HeroScreen extends StatefulWidget {
   const HeroScreen({super.key});
@@ -110,57 +111,105 @@ Widget heroScreenUiBody(
         ),
         actions: [
           Align(
-              alignment: Alignment.center,
-              child: Padding(
-                padding: const EdgeInsets.only(right: 8.0),
-                child: constraints.maxWidth > 750
-                    ? const Row(
-                        children: [
-                          Text(
-                            "Movies",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          Text(
-                            "Series",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          Text(
-                            "MyAccount",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold),
-                          )
-                        ],
-                      )
-                    : InkWell(
-                        onTap: () {
-                          ///TODO handling for login screen
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const LoginScreen(),
-                              ));
-                        },
-                        child: const Icon(
-                          Icons.menu,
-                          color: Colors.white,
-                          size: 40,
+            alignment: Alignment.center,
+            child: Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: constraints.maxWidth > 750
+                  ? Row(
+                      children: [
+                        Text(
+                          "Movies",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
                         ),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Text(
+                          "Series",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Text(
+                          "MyAccount",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    )
+                  : DropdownButton<String>(
+                      icon: Icon(
+                        Icons.menu,
+                        color: Colors.white,
+                        size: 40,
                       ),
-              ))
+                      underline: SizedBox(),
+                      // Remove the underline
+                      dropdownColor: Colors.deepPurple,
+                      // Customize dropdown background color
+                      items: [
+                        DropdownMenuItem(
+                          value: 'Movies',
+                          child: Text(
+                            'Movies',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        DropdownMenuItem(
+                          value: 'Series',
+                          child: Text(
+                            'Series',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        DropdownMenuItem(
+                          value: 'MyAccount',
+                          child: Text(
+                            'MyAccount',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                      onChanged: (String? value) {
+                        if (value == 'MyAccount') {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => LoginScreen(),
+                            ),
+                          );
+                        }
+                      },
+                      // Customize dropdown elevation and borderRadius
+                      elevation: 8,
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(20),
+                        bottom: Radius.circular(20),
+                      ),
+                    ),
+            ),
+          ),
         ],
       ),
       Expanded(

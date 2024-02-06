@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../hero_screen/hero_screen_ui/hero_screen.dart';
+import '../hero_screen/hero_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -15,7 +15,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     Future.delayed(
       const Duration(seconds: 2),
-          () => Navigator.pushReplacement(
+      () => Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => const HeroScreen(),
@@ -49,7 +49,7 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
               child: Center(
                   child: SizedBox(
-                    //Handling for
+                      //Handling for
                       width: constraints.maxWidth > 750
                           ? constraints.maxWidth * 0.35
                           : constraints.maxWidth * 0.55,

@@ -16,10 +16,8 @@ migrate_working_dir/
 *.iws
 .idea/
 
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
-#.vscode/
+# Visual Studio Code related
+.vscode/
 
 # Flutter/Dart/Pub related
 **/doc/api/
@@ -30,6 +28,13 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
+*.sqlite
+*.jks
+*.lock
+*.flutter-plugins
+*.flutter-plugins-dependencies
+/android/app/google-services.json  # Ignore Firebase service account JSON
+/ios/Runner/GoogleService-Info.plist  # Ignore Firebase service account plist
 
 # Symbolication related
 app.*.symbols
@@ -41,3 +46,25 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Gradle related
+**/build/
+.gradle/
+/captures/
+/local.properties
+/.gradle/
+
+# Xcode related
+**/ios/Pods/
+**/ios/Podfile.lock
+**/ios/Runner.xcworkspace/
+**/ios/xcuserdata/
+
+# Flutter web
+/web/build/
+/web/flutter_service_worker.js
+/web/flutter_service_worker.js.map
+
+
+
+*.jar

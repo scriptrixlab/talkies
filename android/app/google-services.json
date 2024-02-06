@@ -12,7 +12,20 @@
           "package_name": "com.scriptrix.talkies"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "769409823973-nia4jrs127b9o02jr0ke9s3vgagk6hfs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.scriptrix.talkies",
+            "certificate_hash": "9dc31c5f816ba8a1107dc11bf9e083653096ee28"
+          }
+        },
+        {
+          "client_id": "769409823973-g80n9l2272h3ec0ee71r6d7h54fc0s96.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAy3W08Hl3ZY0GSG3v74622dXVsW8dI27I"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "769409823973-g80n9l2272h3ec0ee71r6d7h54fc0s96.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
