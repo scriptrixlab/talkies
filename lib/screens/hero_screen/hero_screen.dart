@@ -1,6 +1,10 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../../providers/app_auth_provider.dart';
+import '../../utility/permission_util.dart';
+import '../auth/QRScannerScreen.dart';
 import '../auth/login_screen/login_screen.dart';
 
 class HeroScreen extends StatefulWidget {
@@ -92,6 +96,9 @@ Widget heroScreenUiBody(
     ScrollController scrollController,
     BoxConstraints constraints,
     List<String> heroImages) {
+  AppAuthProvider authProvider =
+      Provider.of<AppAuthProvider>(context, listen: false);
+
   return Column(
     mainAxisSize: MainAxisSize.min,
     children: [
@@ -146,68 +153,109 @@ Widget heroScreenUiBody(
                         )
                       ],
                     )
-                  : DropdownButton<String>(
-                      icon: Icon(
-                        Icons.menu,
-                        color: Colors.white,
-                        size: 40,
-                      ),
-                      underline: SizedBox(),
-                      // Remove the underline
-                      dropdownColor: Colors.deepPurple,
-                      // Customize dropdown background color
-                      items: [
-                        DropdownMenuItem(
-                          value: 'Movies',
-                          child: Text(
-                            'Movies',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
+                  : authProvider.user == null
+                      ? InkWell(
+                          onTap: () {
+                            //if the user is not logged in move to login
+                            AppAuthProvider authProvider =
+                                Provider.of<AppAuthProvider>(context,
+                                    listen: false);
+                            if (authProvider.user == null) {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LoginScreen()),
+                              );
+                            }
+                          },
+                          child: const Icon(
+                            Icons.menu,
+                            color: Colors.white,
+                            size: 40,
+                          ),
+                        )
+                      : DropdownButton<String>(
+                          icon: Icon(
+                            Icons.menu,
+                            color: Colors.white,
+                            size: 40,
+                          ),
+                          underline: SizedBox(),
+                          // Remove the underline
+                          dropdownColor: Colors.deepPurple,
+                          // Customize dropdown background color
+                          items: const [
+                            DropdownMenuItem(
+                              value: 'Movies',
+                              child: Text(
+                                'Movies',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
+                            DropdownMenuItem(
+                              value: 'Series',
+                              child: Text(
+                                'Series',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            DropdownMenuItem(
+                              value: 'MyAccount',
+                              child: Text(
+                                'MyAccount',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            DropdownMenuItem(
+                              value: 'Connect',
+                              child: Text(
+                                'Connect',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                          onChanged: (String? value) async {
+                            if (value == 'MyAccount') {
+                              //move the user to the profile page here
+                            } else if (value == 'Connect') {
+                              bool hasPermission = await PermissionUtils
+                                  .checkCameraPermissionStatus();
+                              if (hasPermission) {
+                                // Permission granted, proceed with your logic
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => QRScannerScreen()),
+                                );
+                              } else {
+                                await PermissionUtils.requestCameraPermission();
+                                // Handle the case when the permission is denied
+                              }
+                            }
+                          },
+                          // Customize dropdown elevation and borderRadius
+                          elevation: 8,
+                          borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(20),
+                            bottom: Radius.circular(20),
                           ),
                         ),
-                        DropdownMenuItem(
-                          value: 'Series',
-                          child: Text(
-                            'Series',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        DropdownMenuItem(
-                          value: 'MyAccount',
-                          child: Text(
-                            'MyAccount',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                      onChanged: (String? value) {
-                        if (value == 'MyAccount') {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => LoginScreen(),
-                            ),
-                          );
-                        }
-                      },
-                      // Customize dropdown elevation and borderRadius
-                      elevation: 8,
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(20),
-                        bottom: Radius.circular(20),
-                      ),
-                    ),
             ),
           ),
         ],

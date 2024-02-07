@@ -179,27 +179,76 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                   ),
                                   const SizedBox(height: 8),
-                                  SizedBox(
-                                    width:
-                                        constraints.maxWidth > 750 ? 100 : 80,
-                                    height: 40,
-                                    child: ElevatedButton(
-                                      onPressed: _onLoginBtnClick,
-                                      style: ButtonStyle(
-                                        shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
-                                          RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                                8), // Adjust border radius as needed
-                                          ),
-                                        ),
-                                      ),
-                                      child: const Text('Go'),
-                                    ),
-                                  ),
                                   Text(
                                     fieldError,
                                     style: TextStyle(color: Colors.red),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                    children: [
+                                      SizedBox(
+                                        width:
+                                        constraints.maxWidth > 750 ? 100 : 80,
+                                        height: 40,
+                                        child: ElevatedButton(
+                                          onPressed: _onLoginBtnClick,
+                                          style: ButtonStyle(
+                                            shape: MaterialStateProperty.all<
+                                                RoundedRectangleBorder>(
+                                              RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(
+                                                    8), // Adjust border radius as needed
+                                              ),
+                                            ),
+                                          ),
+                                          child: const Text('Go'),
+                                        ),
+                                      ),
+                                      SizedBox(height: 8,),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            height: 40,
+                                            child: ElevatedButton(
+                                              onPressed: () {
+                                                _showRegisterDialog(context);
+                                              },
+                                              style: ButtonStyle(
+                                                shape: MaterialStateProperty.all<
+                                                    RoundedRectangleBorder>(
+                                                  RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(
+                                                        8), // Adjust border radius as needed
+                                                  ),
+                                                ),
+                                              ),
+                                              child: const Text('Register'),
+                                            ),
+                                          ),
+                                          SizedBox(width: 8, height: 8,),
+                                          SizedBox(
+                                            height:40,
+                                            child: GestureDetector(
+                                              onTap: _googleSignin,
+                                              child: Container(
+                                                width: 40,
+                                                height: 40,
+                                                decoration: const BoxDecoration(
+                                                  image: DecorationImage(
+                                                    image: AssetImage(
+                                                        "assets/png_images/google_icon.png"),
+                                                    fit: BoxFit.contain,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
@@ -296,7 +345,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     decoration: const BoxDecoration(
                                       image: DecorationImage(
                                         image: AssetImage(
-                                            "assets/png_images/google_icon.jpg"),
+                                            "assets/png_images/google_icon.png"),
                                         fit: BoxFit.contain,
                                       ),
                                     ),
@@ -323,7 +372,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         ),
                                       ),
                                     ),
-                                    child: const Text('Register User'),
+                                    child: const Text('Register'),
                                   ),
                                 ),
                               ),
@@ -464,7 +513,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       height: 60,
                       child: TextField(
                         onChanged: (value) {
-                          emailRegister = value;
+                          passwordRegister = value;
                         },
                         decoration: const InputDecoration(
                           filled: true,
@@ -488,7 +537,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       height: 60,
                       child: TextField(
                         onChanged: (value) {
-                          emailRegister = value;
+                          mobileRegister = value;
                         },
                         decoration: const InputDecoration(
                           filled: true,
