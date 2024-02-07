@@ -1,11 +1,23 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:talkies/providers/app_auth_provider.dart';
 import 'package:talkies/screens/splash/splash_screen.dart';
 
-void main() async {
+Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  if (kIsWeb) {
+    //this executes if started in web
+    await Firebase.initializeApp(
+      options: FirebaseOptions(
+        apiKey: "AIzaSyDAMcjDcEvU3Hsji32vTna05rpk5YhyMNY",
+        projectId: "talkies-b8e63",
+        messagingSenderId: "769409823973",
+        appId: "1:769409823973:web:4c1f412d60977f9638500c",
+      ),
+    );
+  }
   await Firebase.initializeApp();
   runApp(const MyApp());
 }
@@ -32,5 +44,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-
