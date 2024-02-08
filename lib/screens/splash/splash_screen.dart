@@ -1,11 +1,11 @@
+import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import 'package:talkies/providers/app_auth_provider.dart';
 
 import '../auth/login_screen/login_screen.dart';
 import '../hero_screen/hero_screen.dart';
-import 'package:device_info/device_info.dart';
-
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -15,20 +15,22 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  late String deviceId; // Global variable to store the device ID
+  late String deviceId;
+
+  String _locationMessage = ""; // Global variable to store the device ID
 
   @override
   void initState() {
     super.initState();
     _getDeviceId();
+    _getLocation();
     Future.delayed(
       const Duration(seconds: 2),
-          () {
+      () {
         final screenSize = MediaQuery.of(context).size;
         if (screenSize.width > 500) {
           // If the user is logged in, navigate to the HeroScreen
-          AppAuthProvider authProvider =
-          Provider.of<AppAuthProvider>(context, listen: false);
+          AppAuthProvider authProvider = Provider.of<AppAuthProvider>(context, listen: false);
           if (authProvider.user != null) {
             Navigator.pushReplacement(
               context,
@@ -52,10 +54,68 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 
+  Future<void> _getLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Check if location services are enabled
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      _showLocationDisabledDialog();
+      return;
+    }
+
+    // Check location permissions
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        setState(() {
+          Geolocator.requestPermission();
+        });
+        return;
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      setState(() {
+        _showLocationDisabledDialog();
+      });
+      return;
+    }
+
+    // Get the current location
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+
+    setState(() {
+      _locationMessage = 'Latitude: ${position.latitude}, Longitude: ${position.longitude}';
+    });
+    print(_locationMessage);
+  }
+
+  void _showLocationDisabledDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Location Permission Disabled"),
+          content: Text("Please allow location services to access this feature."),
+          actions: [
+            TextButton(
+              child: Text("Settings"),
+              onPressed: () {
+                Geolocator.openLocationSettings();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   Future<void> _getDeviceId() async {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    String id="";
+    String id = "";
     if (Theme.of(context).platform == TargetPlatform.android) {
       AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
       id = androidInfo.androidId;
@@ -95,9 +155,7 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
             child: Center(
               child: SizedBox(
-                width: constraints.maxWidth > 750
-                    ? constraints.maxWidth * 0.35
-                    : constraints.maxWidth * 0.55,
+                width: constraints.maxWidth > 750 ? constraints.maxWidth * 0.35 : constraints.maxWidth * 0.55,
                 child: Image.asset("assets/png_images/icon.png"),
               ),
             ),

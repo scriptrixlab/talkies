@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:talkies/screens/hero_screen/video_screen.dart';
 
 import '../../providers/app_auth_provider.dart';
 import '../../utility/permission_util.dart';
@@ -74,11 +75,8 @@ class _HeroScreenState extends State<HeroScreen> {
             children: [
               Flexible(
                 child: SizedBox(
-                  width: constraints.maxWidth > 750
-                      ? constraints.maxWidth * 0.8
-                      : constraints.maxWidth,
-                  child: heroScreenUiBody(images, context, links,
-                      scrollController, constraints, heroImages),
+                  width: constraints.maxWidth > 750 ? constraints.maxWidth * 0.8 : constraints.maxWidth,
+                  child: heroScreenUiBody(images, context, links, scrollController, constraints, heroImages),
                 ),
               ),
             ],
@@ -89,15 +87,9 @@ class _HeroScreenState extends State<HeroScreen> {
   }
 }
 
-Widget heroScreenUiBody(
-    List<String> images,
-    BuildContext context,
-    List<String> links,
-    ScrollController scrollController,
-    BoxConstraints constraints,
+Widget heroScreenUiBody(List<String> images, BuildContext context, List<String> links, ScrollController scrollController, BoxConstraints constraints,
     List<String> heroImages) {
-  AppAuthProvider authProvider =
-      Provider.of<AppAuthProvider>(context, listen: false);
+  AppAuthProvider authProvider = Provider.of<AppAuthProvider>(context, listen: false);
 
   return Column(
     mainAxisSize: MainAxisSize.min,
@@ -126,30 +118,21 @@ Widget heroScreenUiBody(
                       children: [
                         Text(
                           "Movies",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold),
+                          style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                         SizedBox(
                           width: 20,
                         ),
                         Text(
                           "Series",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold),
+                          style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                         SizedBox(
                           width: 20,
                         ),
                         Text(
                           "MyAccount",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold),
+                          style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
                         )
                       ],
                     )
@@ -157,14 +140,11 @@ Widget heroScreenUiBody(
                       ? InkWell(
                           onTap: () {
                             //if the user is not logged in move to login
-                            AppAuthProvider authProvider =
-                                Provider.of<AppAuthProvider>(context,
-                                    listen: false);
+                            AppAuthProvider authProvider = Provider.of<AppAuthProvider>(context, listen: false);
                             if (authProvider.user == null) {
                               Navigator.pushReplacement(
                                 context,
-                                MaterialPageRoute(
-                                    builder: (context) => LoginScreen()),
+                                MaterialPageRoute(builder: (context) => LoginScreen()),
                               );
                             }
                           },
@@ -234,14 +214,12 @@ Widget heroScreenUiBody(
                             if (value == 'MyAccount') {
                               //move the user to the profile page here
                             } else if (value == 'Connect') {
-                              bool hasPermission = await PermissionUtils
-                                  .checkCameraPermissionStatus();
+                              bool hasPermission = await PermissionUtils.checkCameraPermissionStatus();
                               if (hasPermission) {
                                 // Permission granted, proceed with your logic
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(
-                                      builder: (context) => QRScannerScreen()),
+                                  MaterialPageRoute(builder: (context) => QRScannerScreen()),
                                 );
                               } else {
                                 await PermissionUtils.requestCameraPermission();
@@ -260,6 +238,7 @@ Widget heroScreenUiBody(
           ),
         ],
       ),
+      //main slider
       Expanded(
         flex: 3,
         child: Padding(
@@ -275,14 +254,51 @@ Widget heroScreenUiBody(
             items: heroImages.map((imagePath) {
               return Builder(
                 builder: (BuildContext context) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8.0),
-                      image: DecorationImage(
-                        image: AssetImage(imagePath),
-                        fit: BoxFit.fill,
+                  return Stack(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8.0),
+                          image: DecorationImage(
+                            image: AssetImage(imagePath),
+                            fit: BoxFit.fill,
+                          ),
+                        ),
                       ),
-                    ),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Align(
+                          alignment: Alignment.bottomLeft,
+                          child: SizedBox(
+                            width: 60,
+                            height: 60,
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                color: Colors.red,
+                                shape: BoxShape.circle
+                              ),
+                              child: GestureDetector(
+                                child: const Icon(
+                                  Icons.play_arrow,
+                                  size: 50,
+                                  color: Colors.white,
+                                ),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => VideoScreen(
+                                        videoUrl: 'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4',
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
                   );
                 },
               );
@@ -293,6 +309,7 @@ Widget heroScreenUiBody(
       const SizedBox(
         height: 10,
       ),
+      //sub slider
       Expanded(
         child: Scrollbar(
           controller: scrollController,
